@@ -1,57 +1,26 @@
-const { Client } = require('pg')
-const express = require('express')
-const bcrypt = require('bcrypt')
-const app = express()
-app.use(express.json())
-const path = require('path');
-const session = require("express-session");
-
-
-
+const express = require('express');
 const cors = require('cors');
-
-// Dodaj CORS za React
-app.use(cors({
-   origin: 'http://localhost:3000', // React dev server
-   credentials: true
-}));
+const app = express();
+const session = require('express-session');
 
 
-
-
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(express.urlencoded({
-   extended: true
-}));
-
-app.use(express.static(path.join(__dirname, 'public')));
+// Middleware
+app.use(express.json());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.use(session({
-   secret: 'quiz-secret-key',
+   secret: 'your-secret-key',
    resave: false,
-   saveUninitialized: true,
-   cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
+   saveUninitialized: false,
+   cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 24 sata
+      httpOnly: true,
+      secure: false // true za HTTPS
+   }
 }));
-const BazaUserRoutes = require('./routes/bazauser.routes');
-const LoginRoutes = require('./routes/login.routes');
-const RegisterRoutes = require('./routes/register.routes');
 
+// API routes
+app.use('/', require('./routes/api.routes'));
 
-
-
-app.use('/', BazaUserRoutes);
-app.use('/', LoginRoutes);
-app.use('/', RegisterRoutes);
-
-
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-   console.log(`Server je pokrenut na portu ${PORT}`);
-});
-
-
-
-
-//https://www.youtube.com/watch?v=CL_cvH9OpOc&t=171s
+const PORT = 3001;
+app.listen(PORT, () => console.log(`API server running on ${PORT}`));
