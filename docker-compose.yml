@@ -21,7 +21,7 @@ services:
   # Backend (Express API)
   backend:
     build:
-      context: ./backend
+      context: ./backendTHIS IS A SIMPLE APP FOR MY CHURCH COMMUNITY WITH THIS SIMPLE APP THAT USES JSON.BIN WE CAN TRACK OUR PRAYING
       dockerfile: Dockerfile
     container_name: molitveni_backend
     ports:
